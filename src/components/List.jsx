@@ -1,7 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import spinner from "../assets/spinner.svg";
+import usePhoto from "../hooks/usePhoto";
 
 export default function List() {
+  const [query, setQuery] = useState("random");
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const photosApiData = usePhoto(query, pageNumber);
+  console.log(photosApiData);
+
   return (
     <>
       <h1 className="text-4xl font-semibold">imageWorld</h1>
