@@ -11,6 +11,13 @@ export default function usePhoto(querySearch, pageIndex) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (photos.length !== 0 && maxPages !== 0) {
+      setPhotos([]);
+      setMaxPages(0);
+    }
+  }, [querySearch]);
+
+  useEffect(() => {
     setLoading(true);
 
     fetch(
@@ -19,12 +26,19 @@ export default function usePhoto(querySearch, pageIndex) {
       }`
     )
       .then((resp) => {
+        if (!resp.ok) throw new Error(`${resp.status} Error, something went wrong`);
         return resp.json();
       })
       .then((data) => {
         setPhotos((state) => [...state, ...data.results]);
         setMaxPages(data.total_pages);
         setLoading(false);
+      })
+      .catch((err) => {
+        setError({
+          msg: err.message,
+          state: true,
+        });
       });
   }, [querySearch, pageIndex]);
 
